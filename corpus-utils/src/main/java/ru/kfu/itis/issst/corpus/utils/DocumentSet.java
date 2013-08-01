@@ -21,4 +21,6 @@ public interface DocumentSet {
 	SortedSet<Long> getIdsOfSetWithValue(DocumentAttributeKey attrKey, Object attrVal);
 
 	DocumentDescription getDocDescription(long id);
+
+	String getDocumentText(long id);
 }

@@ -3,6 +3,8 @@
  */
 package ru.kfu.itis.issst.corpus.utils;
 
+import static java.lang.System.exit;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -31,6 +33,11 @@ import ru.kfu.itis.issst.corpus.utils.impl.NFCrawlerDocumentSet;
  */
 public class SamplingLauncher {
 
+	public static final String DEFAULT_RESULT_IDS_FILE = "sample-ids.txt";
+	public static final String DEFAULT_DS_CONFIG_FILE = "docset-config.properties";
+
+	private static final String CMD_LINE_SYNTAX = "sample.sh [OPTIONS] [output-file]";
+	private static final String OPT_HELP = "help";
 	private static final String OPT_SAMPLE_SIZE = "sampleSize";
 	private static final String OPT_DS_CONFIG_FILE = "dsConfigFile";
 
@@ -43,10 +50,12 @@ public class SamplingLauncher {
 		Option sampleSizeOpt = new Option(OPT_SAMPLE_SIZE, true, "The expected sample size");
 		sampleSizeOpt.setRequired(true);
 		sampleSizeOpt.setType(Number.class);
+		Option helpOpt = new Option(OPT_HELP, false, "Print usage");
 
 		Options opts = new Options();
 		opts.addOption(sampleSizeOpt);
 		opts.addOption(docSetCfgOpt);
+		opts.addOption(helpOpt);
 
 		CommandLineParser cmdParser = new GnuParser();
 		CommandLine cl = null;
@@ -54,18 +63,23 @@ public class SamplingLauncher {
 			cl = cmdParser.parse(opts, args);
 		} catch (ParseException e) {
 			System.err.println("Command line parsing failed: " + e);
-			new HelpFormatter().printHelp("sample", opts);
-			System.exit(1);
+			new HelpFormatter().printHelp(CMD_LINE_SYNTAX, opts);
+			exit(1);
 		}
+		if (cl.hasOption(OPT_HELP)) {
+			new HelpFormatter().printHelp(CMD_LINE_SYNTAX, opts);
+			exit(1);
+		}
+
 		File docSetConfigFile = (File) cl.getParsedOptionValue(OPT_DS_CONFIG_FILE);
 		if (docSetConfigFile == null) {
-			docSetConfigFile = new File("docset-config.properties");
+			docSetConfigFile = new File(DEFAULT_DS_CONFIG_FILE);
 		}
 		Number sampleSize = (Number) cl.getParsedOptionValue(OPT_SAMPLE_SIZE);
 
 		String outputFilePath = null;
 		if (cl.getArgList().isEmpty()) {
-			outputFilePath = "sample-ids.txt";
+			outputFilePath = DEFAULT_RESULT_IDS_FILE;
 		} else {
 			outputFilePath = (String) cl.getArgList().get(0);
 		}

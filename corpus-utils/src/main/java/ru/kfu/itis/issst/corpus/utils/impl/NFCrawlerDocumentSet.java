@@ -213,6 +213,14 @@ public class NFCrawlerDocumentSet extends NamedParameterJdbcDaoSupport implement
 				});
 	}
 
+	@Override
+	public String getDocumentText(long id) {
+		Map<String, Object> paramMap = Maps.newHashMap();
+		paramMap.put("id", id);
+		return getNamedParameterJdbcTemplate().queryForObject(
+				SELECT_ARTICLE_TXT, paramMap, String.class);
+	}
+
 	private RuntimeException unknownAttributeKey(NFCrawlerDocumentAttributeKey attrKey) {
 		return new UnsupportedOperationException(String.format("Unknown attribute key: %s",
 				attrKey));
@@ -250,4 +258,7 @@ public class NFCrawlerDocumentSet extends NamedParameterJdbcDaoSupport implement
 
 	private static final String SELECT_ARTICLE_DESC =
 			"SELECT url, char_length(txt), pub_date, feed_id FROM article WHERE id = :id";
+
+	private static final String SELECT_ARTICLE_TXT =
+			"SELECT txt FROM article WHERE id = :id";
 }
