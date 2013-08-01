@@ -18,6 +18,7 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -95,8 +96,12 @@ public class SplittingLauncher {
 			Set<File> aFiles = splitArr.get(a);
 			File aDir = new File(outputDir, String.valueOf(a + 1));
 			for (File srcFile : aFiles) {
-				File destFile = new File(aDir, srcFile.getName());
+				String fileName = srcFile.getName();
+				File destFile = new File(aDir, fileName);
 				FileUtils.copyFile(srcFile, destFile);
+				// TODO refactor
+				File destAnnFile = new File(aDir, FilenameUtils.getBaseName(fileName) + ".ann");
+				FileUtils.touch(destAnnFile);
 			}
 		}
 		log.info("Done.");

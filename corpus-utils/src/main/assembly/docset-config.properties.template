@@ -1,0 +1,8 @@
+txtMinSize=300
+pubDateMin=2013-01-16 00:00:00
+pubDateMax=2013-07-16 00:00:00
+username=
+password=
+url=jdbc:mysql://localhost/TODO
+driverClassName=com.mysql.jdbc.Driver
+initialSize=1
