@@ -19,10 +19,9 @@ import org.apache.commons.io.FileUtils
  */
 object RetainMultiAnnotatedDocs extends StrictLogging {
 
-  val AnnotationConfFilename = "annotation.conf"
   val DocAnnotationFileSuffix = ".ann"
   val DocAnnotationFilefilter: FilenameFilter = FileFilterUtils.suffixFileFilter(DocAnnotationFileSuffix)
-
+  
   private case class Config(dataDir: File = null, outputDir: File = null)
 
   def main(args: Array[String]) {
@@ -65,8 +64,6 @@ object RetainMultiAnnotatedDocs extends StrictLogging {
     for (cDir <- corpusDirs)
       processCorpus(cDir, new File(cfg.outputDir, cDir.getName))
   }
-
-  private def isCorpusDir(dir: File) = new File(dir, AnnotationConfFilename).isFile()
 
   private def getDocIds(dir: File) =
     for {
